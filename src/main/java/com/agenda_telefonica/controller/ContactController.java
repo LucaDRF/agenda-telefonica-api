@@ -6,34 +6,37 @@ import com.agenda_telefonica.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@RestController("/contacts")
+@RestController
+@RequestMapping("/contacts")
 public class ContactController {
     private final ContactService contactService;
 
     @GetMapping("/list")
-    public ContactEntity[] listContacts() {
+    public List<ContactEntity> listContacts() {
         return contactService.listContacts();
     }
 
     @GetMapping("/list-favourites")
-    public ContactEntity[] listFavouriteContacts() {
+    public List<ContactEntity> listFavouriteContacts() {
         return contactService.listFavouriteContacts();
     }
 
-    @GetMapping("/details/{contactId}")
-    public ContactEntity getContactDetails(@PathVariable("chairId") UUID contactId) {
+    @GetMapping("/{contactId}/details")
+    public ContactEntity getContactDetails(@PathVariable("contactId") UUID contactId) {
         return contactService.getContactDetails(contactId);
     }
 
     @PostMapping("/add")
     public void addContact(@RequestBody ContactCreationDto contactCreationDto) {
+        System.out.println("criando contato");
         contactService.addContact(contactCreationDto);
     }
 
-    @PutMapping("/add-favourite/{contactId}")
+    @PatchMapping("/add-favourite/{contactId}")
     public void addFavouriteContact(@PathVariable("contactId") UUID contactId) {
         contactService.addFavouriteContact(contactId);
     }
