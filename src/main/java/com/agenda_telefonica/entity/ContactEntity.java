@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,8 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLRestriction("is_deleted = false")
+@SQLDelete(sql = "UPDATE contact_entity SET is_deleted = true WHERE id=?")
 @Data
 @Entity
 public class ContactEntity {
@@ -34,7 +37,7 @@ public class ContactEntity {
 
     @NotNull(message = "Celular é obrigatório")
     @Length(max = 11, message = "Celular deve ter no máximo 11 caracteres")
-    @Column(length = 11, nullable = false, unique = true)
+    @Column(length = 11, nullable = false)
     private String cellPhone;
 
     @Length(max = 10, message = "Telefone deve ter no máximo 10 caracteres")
