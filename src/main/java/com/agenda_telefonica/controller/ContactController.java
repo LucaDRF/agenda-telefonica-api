@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/contacts")
 public class ContactController {
     private final ContactService contactService;
@@ -32,7 +33,6 @@ public class ContactController {
 
     @PostMapping("/add")
     public void addContact(@RequestBody ContactCreationDto contactCreationDto) {
-        System.out.println("criando contato");
         contactService.addContact(contactCreationDto);
     }
 
