@@ -29,7 +29,7 @@ public class ContactService {
     }
 
     public void addContact(ContactCreationDto contactCreationDto) {
-        validateEmail(contactCreationDto.getEmail());
+        validatePhone(contactCreationDto.getCellPhone());
 
         ContactEntity contactEntity = ContactCreationDto.toEntity(contactCreationDto);
 
@@ -59,12 +59,23 @@ public class ContactService {
                 () -> new ContactNotFoundError("Contato não encontrado")
         ));
 
-//        change
+        validatePhoneWithId(contactId, contactCreationDto.getCellPhone());
 
-        contactEntity.setName(contactCreationDto.getName());
-        contactEntity.setEmail(contactCreationDto.getEmail());
-        contactEntity.setCellPhone(contactCreationDto.getCellPhone());
-        contactEntity.setTelephone(contactCreationDto.getTelephone());
+        if (contactCreationDto.getName() != null) {
+            contactEntity.setName(contactCreationDto.getName());
+        }
+
+        if (contactCreationDto.getEmail() != null) {
+            contactEntity.setEmail(contactCreationDto.getEmail());
+        }
+
+        if (contactCreationDto.getCellPhone() != null) {
+            contactEntity.setCellPhone(contactCreationDto.getCellPhone());
+        }
+
+        if (contactCreationDto.getTelephone() != null) {
+            contactEntity.setTelephone(contactCreationDto.getTelephone());
+        }
 
         contactRepository.save(contactEntity);
     }
@@ -77,9 +88,15 @@ public class ContactService {
         contactRepository.delete(contactEntity);
     }
 
-    private void validateEmail(String email) {
-        if (contactRepository.findByEmail(email) != null) {
-            throw new InvalidInputError("Email já utilizado");
+    private void validatePhone(String phone) {
+        if (contactRepository.findExistingPhone(phone) != null) {
+            throw new InvalidInputError("Celular já utilizado");
+        }
+    }
+
+    private void validatePhoneWithId(UUID id, String phone) {
+        if (contactRepository.findExistingPhoneById(id, phone) != null) {
+            throw new InvalidInputError("Celular já utilizado");
         }
     }
 }
